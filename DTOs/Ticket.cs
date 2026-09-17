@@ -1,17 +1,9 @@
 ﻿
 namespace PDFReader.DTOs;
 
-internal class Ticket
+internal class Ticket(string title, DateOnly date, TimeSpan time)
 {
-    public string Title { get; init; }
-    public DateTime Date { get; init; }
-    public DateTime Time { get; init; }
-    public virtual string Culture { get; } = "es-CO";
-
-    public Ticket(string title, DateTime date, DateTime time)
-    {
-        Title = title;
-        Date = date;
-        Time = time;
-    }
+    public string Title { get; init; } = title;
+    public DateOnly Date { get; init; } = date;
+    public TimeSpan Time { get; init; } = time;
 }
