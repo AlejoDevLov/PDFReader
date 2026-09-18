@@ -9,21 +9,21 @@ internal class TicketFactoryDateAndTimeExtractor
     // gets rid of the string at the leftside of the semicolon, leaving only the date/time and spliting it using the @separators symbols.
     // @indexOfSeparator represents the index of the separator ":" in (date: dateOfMovie / time: timeOfMovie)
     // @separators can be either "/", ":", " ". Thee're used to separate date or time
-    // The @elementsToSkipAtLast is used for time to skip the value PM/AM when it has the 12h format
+    // The @skipLastElementInTime is a bool used for time to skip the value PM/AM when it has the 12h format
     // @return each value of the date/time as int[]
     public static int[] Extract(
         IEnumerable<string> ticketsData, 
         int indexOfElement, 
         int indexOfSeparator,
         char[] separators,
-        int elementsToSkipAtLast
+        bool skipLastElementInTime
         )
     {
         return [.. ticketsData
             .ElementAt(indexOfElement)
             [indexOfSeparator..]
             .Split(separators)
-            .SkipLast(elementsToSkipAtLast)
+            .SkipLast( skipLastElementInTime ? 1 : 0 )
             .Select(el => int.Parse(el))];
     }
 }
