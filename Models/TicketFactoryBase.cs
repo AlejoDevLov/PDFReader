@@ -1,7 +1,8 @@
 ﻿using PDFReader.DTOs;
+using PDFReader.Utilities;
 using System.Globalization;
 
-namespace PDFReader.Utilities;
+namespace PDFReader.Models;
 
 // @skiupLastElementInTime is used when the format of time is 12h, this is, to discard PM/AM
 internal abstract class TicketFactoryBase

@@ -1,5 +1,5 @@
 ﻿using PDFReader.DTOs;
-using PDFReader.Utilities;
+using PDFReader.Models;
 
 namespace PDFReader.Services;
 

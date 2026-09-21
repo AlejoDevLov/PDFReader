@@ -1,4 +1,4 @@
-﻿namespace PDFReader.Utilities;
+﻿namespace PDFReader.Models;
 
 
 internal class JPTicketFactory : TicketFactoryBase
