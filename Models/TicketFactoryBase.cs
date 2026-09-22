@@ -1,13 +1,12 @@
 ﻿using PDFReader.DTOs;
-using PDFReader.Utilities;
-using System.Globalization;
 
 namespace PDFReader.Models;
 
-// @skiupLastElementInTime is used when the format of time is 12h, this is, to discard PM/AM
 internal abstract class TicketFactoryBase
 {
-    public IEnumerable<Ticket> CreateTicket(IEnumerable<string> ticketsData, bool skipLastElemenInTime)
+    protected abstract string CultureInfoType { get; init; }
+
+    public IEnumerable<Ticket> CreateTicket(IEnumerable<string> ticketsData)
     {
         var tickets = new List<Ticket>();
 
@@ -17,42 +16,18 @@ internal abstract class TicketFactoryBase
         {
             // Takes the first element in the current iteration(title: nameOfMovie...) and returns the position of semicolon (:) in the string
             // Gets rid of the string at the leftside of the semicolon, leaving only the title of the movie
-            var (title, indexOfSeparator) = TicketFactoryTitleAndSeparatorIndexExtractor.Extract(ticketsData, i);
+            var title = ticketsData.ElementAt(i).Split("Title:").Last();
 
-            // Passes the second element in the current iteration(date: dateOfMovie) and the separator for dates
-            var dateAsArray = TicketFactoryDateAndTimeExtractor.Extract(ticketsData, i + 1, indexOfSeparator + 1, ['/'], false);
+            var date = FormatDate(ticketsData.ElementAt(i + 1).Split("Date:").Last());
 
-            // Passes the third element in the current iteration (time: timeOfMovie), its respective separators for time
-            // and skips the last element (PM/AM).
-            var timeAsArray = TicketFactoryDateAndTimeExtractor.Extract(ticketsData, i + 2, indexOfSeparator + 1, [':', ' '], skipLastElemenInTime);
+            var time = FormatTime(ticketsData.ElementAt(i + 2).Split("Time:").Last());
 
-            // Takes the third element in the current iteration (time: timeOfMovie...) and validates if it contains PM or AM in its format.
-            // To convert it in 24h format.
-            if (ticketsData.ElementAt(i + 2).Contains("PM"))
-            {
-                timeAsArray[0] = timeAsArray[0] < 12
-                                     ? timeAsArray[0] += 12
-                                     : timeAsArray[0];
-            }
-            else if (ticketsData.ElementAt(i + 2).Contains("AM"))
-            {
-                timeAsArray[0] = timeAsArray[0] == 12
-                                     ? timeAsArray[0] = 00
-                                     : timeAsArray[0];
-            }
-
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-
-            var time = new TimeSpan(timeAsArray[0], timeAsArray[1], 00);
-
-            // Each class must implement the creation of its respective date
-            var date = CreateDate(dateAsArray);
-
-            tickets.Add(new Ticket(title, date, time));
+            tickets.Add( new Ticket( title, date, time ));
         }
 
         return tickets;
     }
 
-    protected abstract DateOnly CreateDate(int[] dateAsArray);
+    protected abstract TimeOnly FormatTime(string unformatedTime);
+    protected abstract DateOnly FormatDate(string unformatedDate);
 }

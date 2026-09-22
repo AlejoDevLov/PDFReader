@@ -15,17 +15,17 @@ internal class TicketService
         if ( ticketsAsString.Contains("www.ourCinema.com"))
         {
             USTicketFactory tf = new();
-            Tickets.AddRange( tf.CreateTicket(ticketsData, true) );
+            Tickets.AddRange( tf.CreateTicket(ticketsData) );
         }
         else if (ticketsAsString.Contains("www.ourCinema.fr"))
         {
             FRTicketFactory tf = new();
-            Tickets.AddRange(tf.CreateTicket(ticketsData, false));
+            Tickets.AddRange(tf.CreateTicket(ticketsData));
         }
         else if (ticketsAsString.Contains("www.ourCinema.jp"))
         {
             JPTicketFactory tf = new();
-            Tickets.AddRange(tf.CreateTicket(ticketsData, false));
+            Tickets.AddRange(tf.CreateTicket(ticketsData));
         }
         else
         {

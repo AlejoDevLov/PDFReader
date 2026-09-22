@@ -1,10 +1,22 @@
-﻿namespace PDFReader.Models;
+﻿using System.Globalization;
+
+namespace PDFReader.Models;
 
 
 internal class USTicketFactory : TicketFactoryBase
 {
-    protected override DateOnly CreateDate(int[] dateAsArray)
+    protected override string CultureInfoType { get; init; } = "en-US";
+
+    protected override DateOnly FormatDate(string unformatedDate)
     {
-        return new DateOnly(dateAsArray[2], dateAsArray[0], dateAsArray[1]);
+        var culture = new CultureInfo(CultureInfoType);
+        return DateOnly.Parse(unformatedDate, culture);
+    }
+
+    protected override TimeOnly FormatTime(string unformatedTime)
+    {
+        var culture = new CultureInfo(CultureInfoType);
+        return TimeOnly.Parse(unformatedTime, culture);
     }
 }
+

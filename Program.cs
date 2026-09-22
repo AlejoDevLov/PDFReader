@@ -7,8 +7,7 @@ var folderPath = "C:\\Users\\alejo\\Programming\\C#\\Resources\\Tickets\\";
 
 try
 {
-    var allFilePaths = Directory.GetFiles(folderPath);
-    var pdfPaths = allFilePaths.Where(path => path.Contains(".pdf")).ToArray();
+    var pdfPaths = Directory.GetFiles(folderPath, "*.pdf");
 
     var program = new PDFReaderProgram(new PDFPig());
     program.Start(pdfPaths, folderPath);
