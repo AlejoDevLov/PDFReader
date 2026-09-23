@@ -1,10 +1,11 @@
 ﻿using PDFReader.DTOs;
+using System.Globalization;
 
 namespace PDFReader.Models;
 
 internal abstract class TicketFactoryBase
 {
-    protected abstract string CultureInfoType { get; init; }
+    protected abstract CultureInfo CultureInfoType { get; }
 
     public IEnumerable<Ticket> CreateTicket(IEnumerable<string> ticketsData)
     {
@@ -12,10 +13,9 @@ internal abstract class TicketFactoryBase
 
         // This loop is increase by 3 in each iteration to be sure of taking the three values 
         // each ticket has (title, date and time) in case there is more than one ticket in the string.
+        // In each iteration we split each line of the ticketData and take only the value of each 'property'
         for (int i = 0; i < ticketsData.Count(); i += 3)
         {
-            // Takes the first element in the current iteration(title: nameOfMovie...) and returns the position of semicolon (:) in the string
-            // Gets rid of the string at the leftside of the semicolon, leaving only the title of the movie
             var title = ticketsData.ElementAt(i).Split("Title:").Last();
 
             var date = FormatDate(ticketsData.ElementAt(i + 1).Split("Date:").Last());
@@ -28,6 +28,13 @@ internal abstract class TicketFactoryBase
         return tickets;
     }
 
-    protected abstract TimeOnly FormatTime(string unformatedTime);
-    protected abstract DateOnly FormatDate(string unformatedDate);
+    private DateOnly FormatDate(string unformatedDate)
+    {
+        return DateOnly.Parse(unformatedDate, CultureInfoType);
+    }
+
+    private TimeOnly FormatTime(string unformatedTime)
+    {
+        return TimeOnly.Parse(unformatedTime, CultureInfoType);
+    }
 }
